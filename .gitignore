@@ -1,0 +1,6 @@
+*.pdf
+*.png
+*.hdf5
+.ipynb_checkpoints/
+plummer/
+gsl_solver/
