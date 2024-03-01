@@ -114,42 +114,31 @@ for i in range(24):
 massfraction = np.array(massfraction)
 massfraction = np.nan_to_num(massfraction, nan=0.)
 
-# Plot density scatter of initial cluster mass vs disruption time
-fig = plt.figure()
-ax1 = fig.add_subplot(1,1,1)
-ax2 = ax1.twinx()
-ax1, cb = density_scatter(init_cluster_masses, lifetime_gyr, ax=ax1, bins=[marray_icmf, np.logspace(-2,1.5,100)], edgecolors='face', s=5)
-ax1.set(xscale='log', yscale='log', xlim=(5e3, 1e7), ylim=(1e-2, 2.3e1))
-ax1.set(xlabel=r'$\rm{Initial}$ $\rm{Cluster}$ $\rm{Mass}$ [$M_\odot$]', ylabel=r'$t_{\rm{disruption}}$ [$\rm{Gyr}$]')
+# Calculate mass lost due to relaxation and shocks
+mevminit = masslostrelax/init_cluster_masses
+mshminit = masslostshock/init_cluster_masses
+
+# Plot density scatter of mass lost due to different processes and density scatter of initial cluster mass vs disruption time
+fig, ax = plt.subplots(1, 3, figsize=(20,5))
+ax[0], cb = density_scatter(init_cluster_masses, mshminit, ax=ax[0],bins=[marray_icmf, np.linspace(0,1.1,100)], edgecolors='face', s=5)
+ax[0].set(xscale='log', xlim=(5e3, 5e7), ylim=(0,1), xlabel=r'$\rm{Initial}$ $\rm{Cluster}$ $\rm{Mass}$ [$M_\odot$]', ylabel=r'$\Delta m_{\rm{sh}}/m_{\rm{init}}$')
+
+ax[1], cb = density_scatter(init_cluster_masses, mevminit, ax=ax[1],bins=[marray_icmf, np.linspace(0,1.1,100)], edgecolors='face', s=5)
+ax[1].set(xscale='log', xlim=(5e3, 5e7), ylim=(0,1), xlabel=r'$\rm{Initial}$ $\rm{Cluster}$ $\rm{Mass}$ [$M_\odot$]', ylabel=r'$\Delta m_{\rm{ev}}/m_{\rm{init}}$')
+
+ax[2], cb = density_scatter(init_cluster_masses, lifetime_gyr, ax=ax[2], bins=[marray_icmf, np.logspace(-2,1.5,100)], edgecolors='face', s=5)
+ax[2].set(xscale='log', yscale='log', xlim=(5e3, 1e7), ylim=(1e-2, 2.3e1))
+ax[2].set(xlabel=r'$\rm{Initial}$ $\rm{Cluster}$ $\rm{Mass}$ [$M_\odot$]', ylabel=r'$t_{\rm{disruption}}$ [$\rm{Gyr}$]')
+ax2 = ax[2].twinx()
 ax2.plot((marray_icmf[:-1] + marray_icmf[1:])/2, fraction, color='r', label='Number fraction')
 ax2.plot((marray_icmf[:-1] + marray_icmf[1:])/2, massfraction, color='b', label='Mass fraction')
 ax2.set_ylim(0, 1)
 ax2.set_ylabel('Fraction of disrupted clusters/surviving mass')
 ax2.legend()
-
-cbar = fig.colorbar(cb, ax=ax1)
-# Move the colorbar to a new position
-new_position = fig.add_axes([0.85, 0.11, 0.03, 0.77])
-cbar.ax.remove()
-cbar = fig.colorbar(cb, cax=new_position)
-cbar.ax.set_ylabel('Number')
-plt.savefig('disruption.pdf')
-print('Disruption plot saved')
-
-# Plot density scatter of mass lost due to different processes
-mevminit = masslostrelax/init_cluster_masses
-mshminit = masslostshock/init_cluster_masses
-mshminit[(mshminit>1)] = 1
-
-fig, ax = plt.subplots(1, 2, figsize=(15,5))
-ax[0], cb = density_scatter(init_cluster_masses, mevminit, ax=ax[0],bins=[marray_icmf, np.linspace(0,1.1,100)], edgecolors='face', s=5)
-ax[1], cb = density_scatter(init_cluster_masses, mshminit, ax=ax[1],bins=[marray_icmf, np.linspace(0,1.1,100)], edgecolors='face', s=5)
-ax[0].set(xscale='log', xlim=(5e3, 5e7), ylim=(0,1), xlabel=r'$\rm{Initial}$ $\rm{Cluster}$ $\rm{Mass}$ [$M_\odot$]', ylabel=r'$\Delta m_{\rm{ev}}/m_{\rm{init}}$')
-ax[1].set(xscale='log', xlim=(5e3, 5e7), ylim=(0,1), xlabel=r'$\rm{Initial}$ $\rm{Cluster}$ $\rm{Mass}$ [$M_\odot$]', ylabel=r'$\Delta m_{\rm{sh}}/m_{\rm{init}}$')
 cbar = fig.colorbar(cb, ax=ax)
 cbar.ax.set_ylabel('Number')
-plt.savefig('lostmass.pdf')
-print('Mass lost plot saved')
+plt.savefig('disruption_plots.pdf')
+print('Disruption plots saved')
 
 # Plot mass functions comparison
 # Load observational data
