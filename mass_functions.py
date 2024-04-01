@@ -119,7 +119,7 @@ mevminit = masslostrelax/init_cluster_masses
 mshminit = masslostshock/init_cluster_masses
 
 # Plot density scatter of mass lost due to different processes and density scatter of initial cluster mass vs disruption time
-fig, ax = plt.subplots(1, 3, figsize=(20,5))
+fig, ax = plt.subplots(1, 3, figsize=(16,5))
 ax[0], cb = density_scatter(init_cluster_masses, mshminit, ax=ax[0],bins=[marray_icmf, np.linspace(0,1.1,100)], edgecolors='face', s=5)
 ax[0].set(xscale='log', xlim=(5e3, 5e7), ylim=(0,1), xlabel=r'$\rm{Initial}$ $\rm{Cluster}$ $\rm{Mass}$ [$M_\odot$]', ylabel=r'$\Delta m_{\rm{sh}}/m_{\rm{init}}$')
 
@@ -137,6 +137,7 @@ ax2.set_ylabel('Fraction of disrupted clusters/surviving mass')
 ax2.legend()
 cbar = fig.colorbar(cb, ax=ax)
 cbar.ax.set_ylabel('Number')
+plt.tight_layout()
 plt.savefig('disruption_plots.pdf')
 print('Disruption plots saved')
 
