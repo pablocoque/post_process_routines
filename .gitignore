@@ -5,3 +5,7 @@
 plummer/
 gsl_solver/
 *.txt
+restart*
+log*.out
+log*.err
+cont
