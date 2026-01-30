@@ -10,3 +10,4 @@ log*.out
 log*.err
 cont
 parameters-usedvalues
+*.mp4
